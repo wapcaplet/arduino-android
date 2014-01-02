@@ -23,25 +23,25 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class DroidRangeFinderLaunch extends Activity {
-	static final String TAG = "SRM";
+  static final String TAG = "SRM";
 
-	static Intent createIntent(Activity activity) {
-		return new Intent(activity, DroidSoundDisplay.class);
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  static Intent createIntent(Activity activity) {
+    return new Intent(activity, DroidSoundDisplay.class);
+  }
 
-		Intent intent = createIntent(this);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		try {
-			startActivity(intent);
-		} catch (ActivityNotFoundException e) {
-			Log.e(TAG, "unable to start activity", e);
-		}
-		finish();
-	}
+    Intent intent = createIntent(this);
+
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    try {
+      startActivity(intent);
+    } catch (ActivityNotFoundException e) {
+      Log.e(TAG, "unable to start activity", e);
+    }
+    finish();
+  }
 }

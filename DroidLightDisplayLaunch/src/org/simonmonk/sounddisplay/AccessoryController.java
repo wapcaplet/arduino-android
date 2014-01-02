@@ -22,24 +22,24 @@ import android.view.View;
 
 public abstract class AccessoryController {
 
-	protected DroidSoundDisplayActivity mHostActivity;
+  protected DroidSoundDisplayActivity mHostActivity;
 
-	public AccessoryController(DroidSoundDisplayActivity activity) {
-		mHostActivity = activity;
-	}
+  public AccessoryController(DroidSoundDisplayActivity activity) {
+    mHostActivity = activity;
+  }
 
-	protected View findViewById(int id) {
-		return mHostActivity.findViewById(id);
-	}
+  protected View findViewById(int id) {
+    return mHostActivity.findViewById(id);
+  }
 
-	protected Resources getResources() {
-		return mHostActivity.getResources();
-	}
+  protected Resources getResources() {
+    return mHostActivity.getResources();
+  }
 
-	void accessoryAttached() {
-		onAccesssoryAttached();
-	}
+  void accessoryAttached() {
+    onAccesssoryAttached();
+  }
 
-	abstract protected void onAccesssoryAttached();
+  abstract protected void onAccesssoryAttached();
 
 }

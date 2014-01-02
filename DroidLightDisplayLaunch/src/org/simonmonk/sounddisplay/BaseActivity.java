@@ -23,55 +23,55 @@ import android.view.MenuItem;
 
 public class BaseActivity extends DroidSoundDisplayActivity {
 
-	private InputController mInputController;
+  private InputController mInputController;
 
-	public BaseActivity() {
-		super();
-	}
+  public BaseActivity() {
+    super();
+  }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (mAccessory != null) {
-			showControls();
-		} else {
-			hideControls();
-		}
-	}
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (mAccessory != null) {
+      showControls();
+    } else {
+      hideControls();
+    }
+  }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add("Test");
-		return true;
-	}
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add("Test");
+    return true;
+  }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getTitle() == "Test") {
-			showControls();
-		} 
-		return true;
-	}
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getTitle() == "Test") {
+      showControls();
+    }
+    return true;
+  }
 
-	protected void enableControls(boolean enable) {
-		if (enable) {
-			showControls();
-		} else {
-			hideControls();
-		}
-	}
+  protected void enableControls(boolean enable) {
+    if (enable) {
+      showControls();
+    } else {
+      hideControls();
+    }
+  }
 
-	protected void hideControls() {
-		setContentView(R.layout.no_device);
-		mInputController = null;
-	}
+  protected void hideControls() {
+    setContentView(R.layout.no_device);
+    mInputController = null;
+  }
 
-	protected void showControls() {
-		setContentView(R.layout.main);
+  protected void showControls() {
+    setContentView(R.layout.main);
 
-		mInputController = new InputController(this);
-		mInputController.accessoryAttached();
-	}
+    mInputController = new InputController(this);
+    mInputController.accessoryAttached();
+  }
 
 
 }
