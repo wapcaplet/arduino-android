@@ -1,4 +1,4 @@
-//    HomeAutomation software to accompany the book 
+//    HomeAutomation software to accompany the book
 //    'Practical Arduino + Android Projects for the Evil Genius'
 //    Copyright (C) 2011. Simon Monk
 //
@@ -20,84 +20,83 @@ package com.simonmonk.home;
 import java.util.Date;
 import android.content.SharedPreferences;
 
-
 class TimerMonitor extends Thread
 {
-	private HomeActivity mActivity;
-	
-	public TimerMonitor(HomeActivity activity)
-	{
-		super();
-		mActivity = activity;
-	}
-	
-	public void run()
-	{
-		while (true)
-		{
-			for (int i = 1; i <= 5; i++)
-			{
-				handleTimerNumber(i);
-				try 
-				{
-					Thread.sleep(5000);
-				} 
-				catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
-			}
-			try 
-			{
-				Thread.sleep(10000);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
-	private void handleTimerNumber(int i) 
-	{
-		String itemStr = getSetting("TIMER_OP" + i);
-		if ("null".equals(itemStr))
-		{
-			return; // timer not in use
-		}
-		String startTimeStr = getSetting("TIMER_ON"+ i);
-		String endTimeStr = getSetting("TIMER_OFF" + i);
-		int start = Integer.parseInt(startTimeStr);
-		int end = Integer.parseInt(endTimeStr);
-		int op = Integer.parseInt(itemStr);
-		// compare with time now and if it should be on, but isn't, turn it on.
-		// the times can just be compared as 4 digit numbers
-		Date d = new Date();
-		int t = d.getHours() * 100 + d.getMinutes();
+  private HomeActivity mActivity;
 
-		boolean shouldBeOn = false;
-		// if the off time appears to be before the on time, then it refers to the next day
-		if (end < start)
-		{
-			end = end + 2400;
-		}
-		shouldBeOn = (t >= start && t < end);
-		DigitalOutputs outputs = mActivity.outputs;
-		if (shouldBeOn && ! outputs.isOn(op))
-		{
-			outputs.turnOn(op);
-		}
-		if (! shouldBeOn && outputs.isOn(op))
-		{
-			outputs.turnOff(op);
-		}
-	}
+  public TimerMonitor(HomeActivity activity)
+  {
+    super();
+    mActivity = activity;
+  }
 
-	String getSetting(String name)
-	{
-		SharedPreferences settings = mActivity.getSharedPreferences(PrefsActivity.PREFS_NAME, 0);
-        return settings.getString(name, "null");
-	}
-	  
+  public void run()
+  {
+    while (true)
+    {
+      for (int i = 1; i <= 5; i++)
+      {
+        handleTimerNumber(i);
+        try
+        {
+          Thread.sleep(5000);
+        }
+        catch (InterruptedException e)
+        {
+          e.printStackTrace();
+        }
+      }
+      try
+      {
+        Thread.sleep(10000);
+      }
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  private void handleTimerNumber(int i)
+  {
+    String itemStr = getSetting("TIMER_OP" + i);
+    if ("null".equals(itemStr))
+    {
+      return; // timer not in use
+    }
+    String startTimeStr = getSetting("TIMER_ON"+ i);
+    String endTimeStr = getSetting("TIMER_OFF" + i);
+    int start = Integer.parseInt(startTimeStr);
+    int end = Integer.parseInt(endTimeStr);
+    int op = Integer.parseInt(itemStr);
+    // compare with time now and if it should be on, but isn't, turn it on.
+    // the times can just be compared as 4 digit numbers
+    Date d = new Date();
+    int t = d.getHours() * 100 + d.getMinutes();
+
+    boolean shouldBeOn = false;
+    // if the off time appears to be before the on time, then it refers to the next day
+    if (end < start)
+    {
+      end = end + 2400;
+    }
+    shouldBeOn = (t >= start && t < end);
+    DigitalOutputs outputs = mActivity.outputs;
+    if (shouldBeOn && ! outputs.isOn(op))
+    {
+      outputs.turnOn(op);
+    }
+    if (! shouldBeOn && outputs.isOn(op))
+    {
+      outputs.turnOff(op);
+    }
+  }
+
+  String getSetting(String name)
+  {
+    SharedPreferences settings = mActivity.getSharedPreferences(PrefsActivity.PREFS_NAME, 0);
+    return settings.getString(name, "null");
+  }
+
 }

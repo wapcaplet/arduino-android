@@ -1,4 +1,4 @@
-//    HomeAutomation software to accompany the book 
+//    HomeAutomation software to accompany the book
 //    'Practical Arduino + Android Projects for the Evil Genius'
 //    Copyright (C) 2011. Simon Monk
 //
@@ -35,105 +35,103 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class HomeActivity extends Activity 
+public class HomeActivity extends Activity
 {
-    /** Called when the activity is first created. */
-	
-	public DigitalOutputs outputs;
-	public String URL = "not connected";
+  /** Called when the activity is first created. */
 
-	
-	private WebServer mWebserver = null;
-	private TextView mStatusView;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) 
+  public DigitalOutputs outputs;
+  public String URL = "not connected";
+
+  private WebServer mWebserver = null;
+  private TextView mStatusView;
+
+  @Override
+  public void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    URL = startWebServer();
+
+    TimerMonitor tm = new TimerMonitor(HomeActivity.this);
+    tm.start();
+
+    HeatingMonitor hm = new HeatingMonitor(HomeActivity.this);
+    hm.start();
+
+    Button button = (Button)findViewById(R.id.openButton);
+    button.setOnClickListener(
+      new OnClickListener()
+      {
+        public void onClick(View v)
+        {
+          Intent myIntent = new Intent(Intent.ACTION_VIEW);
+          myIntent.setData(Uri.parse(URL + "home?"));
+          startActivity(myIntent);
+        }
+      }
+    );
+    button = (Button)findViewById(R.id.prefsButton);
+    button.setOnClickListener(
+      new OnClickListener()
+      {
+        public void onClick(View v)
+        {
+          Intent i = new Intent(HomeActivity.this, PrefsActivity.class);
+              startActivity(i);
+        }
+      }
+    );
+    button = (Button)findViewById(R.id.restartButton);
+    button.setOnClickListener(
+      new OnClickListener()
+      {
+        public void onClick(View v)
+        {
+          mWebserver.destroy(); // BAD BAD BAD! but I cannot work out how to restart server gracefully
+        }
+      }
+    );
+  }
+
+  private String startWebServer()
+  {
+    mStatusView = (TextView)findViewById(R.id.statusview);
+    URL = "http://" + getLocalIpAddress() + ":8080/";
+    outputs = new DigitalOutputs(HomeActivity.this);
+
+    mWebserver = new WebServer(HomeActivity.this);
+    mWebserver.start();
+    return URL;
+  }
+
+  public void setStatus(String status)
+  {
+    mStatusView.setText(status);
+  }
+
+  public String getLocalIpAddress()
+  {
+    try
     {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main);
-
-        URL = startWebServer();
-		
-		TimerMonitor tm = new TimerMonitor(HomeActivity.this);
-		tm.start();
-		
-		HeatingMonitor hm = new HeatingMonitor(HomeActivity.this);
-		hm.start();	
-        
-		Button button = (Button)findViewById(R.id.openButton);
-        button.setOnClickListener(
-        		new OnClickListener()
-        		{
-					public void onClick(View v) 
-					{
-						Intent myIntent = new Intent(Intent.ACTION_VIEW);
-						myIntent.setData(Uri.parse(URL + "home?"));
-						startActivity(myIntent);
-					}
-        		});
-        button = (Button)findViewById(R.id.prefsButton);
-        button.setOnClickListener(
-        		new OnClickListener()
-        		{
-					public void onClick(View v) 
-					{
-						Intent i = new Intent(HomeActivity.this, PrefsActivity.class);
-			        	startActivity(i);
-					}
-        		});
-        button = (Button)findViewById(R.id.restartButton);
-        button.setOnClickListener(
-        		new OnClickListener()
-        		{
-					public void onClick(View v) 
-					{
-						mWebserver.destroy(); // BAD BAD BAD! but I cannot work out how to restart server gracefully
-					}
-        		});
+      for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)
+      {
+        NetworkInterface intf = en.nextElement();
+        for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
+        {
+          InetAddress inetAddress = enumIpAddr.nextElement();
+          if (!inetAddress.isLoopbackAddress())
+          {
+            return inetAddress.getHostAddress().toString();
+          }
+        }
+      }
     }
-
-	private String startWebServer() 
-	{
-		mStatusView = (TextView)findViewById(R.id.statusview);
-        URL = "http://" + getLocalIpAddress() + ":8080/";
-        outputs = new DigitalOutputs(HomeActivity.this);
-       
-     	mWebserver = new WebServer(HomeActivity.this);
-		mWebserver.start();
-		return URL;
-	}
-    
-    public void setStatus(String status)
+    catch (SocketException ex)
     {
-    	mStatusView.setText(status);
+      Log.e("SRM", ex.toString());
     }
-    
-    public String getLocalIpAddress() 
-    {
-    	try 
-    	{
-    		for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)
-    		{
-    			NetworkInterface intf = en.nextElement();
-    			for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
-    			{
-    				InetAddress inetAddress = enumIpAddr.nextElement();
-    				if (!inetAddress.isLoopbackAddress()) 
-    				{
-    					return inetAddress.getHostAddress().toString();
-    				}
-    			}
-    		}
-    	} 
-    	catch (SocketException ex) 
-    	{
-    		Log.e("SRM", ex.toString());
-    	}
-    	return null;
-    }
+    return null;
+  }
 
-	  
-	  
-	  
 }
+

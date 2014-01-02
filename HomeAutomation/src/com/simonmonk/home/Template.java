@@ -1,4 +1,4 @@
-//    HomeAutomation software to accompany the book 
+//    HomeAutomation software to accompany the book
 //    'Practical Arduino + Android Projects for the Evil Genius'
 //    Copyright (C) 2011. Simon Monk
 //
@@ -23,62 +23,62 @@ import java.io.InputStream;
 
 import android.app.Activity;
 
-public class Template 
+public class Template
 {
-	private Activity mActivity;
-	private String mValue;
-	
-	public Template(String resourceName, Activity activity)
-	{
-		mActivity = activity;
-		mValue = readTemplate(resourceName);
-	}
-	
-	public void set(String key, String value)
-	{
-		mValue = mValue.replaceAll("::" + key + "::", value);
-	}
-	
-	public String toString()
-	{
-		return mValue;
-	}
-	
-	private String readTemplate(String resourceName)
-	{
-		InputStream inputStream = null;
-		try 
-		{
-			inputStream = mActivity.getAssets().open("templates/"+ resourceName + ".html");
-		} 
-		catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Template not found: " + resourceName;
-		}
-		return readTextFile(inputStream);
-	}
-	
-	
-    private String readTextFile(InputStream inputStream) 
+  private Activity mActivity;
+  private String mValue;
+
+  public Template(String resourceName, Activity activity)
+  {
+    mActivity = activity;
+    mValue = readTemplate(resourceName);
+  }
+
+  public void set(String key, String value)
+  {
+    mValue = mValue.replaceAll("::" + key + "::", value);
+  }
+
+  public String toString()
+  {
+    return mValue;
+  }
+
+  private String readTemplate(String resourceName)
+  {
+    InputStream inputStream = null;
+    try
     {
-    	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    	byte buf[] = new byte[1024];
-    	int len;
-    	try 
-    	{
-    		while ((len = inputStream.read(buf)) != -1) 
-    		{
-    	       outputStream.write(buf, 0, len);
-    	    }
-    	    outputStream.close();
-    	    inputStream.close();
-    	} 
-    	catch (IOException e) 
-    	{
-    	}
-    	return outputStream.toString();
-   }
-	
+      inputStream = mActivity.getAssets().open("templates/"+ resourceName + ".html");
+    }
+    catch (IOException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return "Template not found: " + resourceName;
+    }
+    return readTextFile(inputStream);
+  }
+
+
+  private String readTextFile(InputStream inputStream)
+  {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    byte buf[] = new byte[1024];
+    int len;
+    try
+    {
+      while ((len = inputStream.read(buf)) != -1)
+      {
+        outputStream.write(buf, 0, len);
+      }
+      outputStream.close();
+      inputStream.close();
+    }
+    catch (IOException e)
+    {
+    }
+    return outputStream.toString();
+  }
+
 }
