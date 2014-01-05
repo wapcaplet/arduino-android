@@ -20,6 +20,7 @@
 package com.simonmonk.home;
 
 import java.net.InetAddress;
+import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -87,6 +88,7 @@ public class HomeActivity extends Activity
       {
         public void onClick(View v)
         {
+          // FIXME: This crashes the app
           mWebserver.destroy(); // BAD BAD BAD! but I cannot work out how to restart server gracefully
         }
       }
@@ -119,9 +121,9 @@ public class HomeActivity extends Activity
         for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
         {
           InetAddress inetAddress = enumIpAddr.nextElement();
-          if (!inetAddress.isLoopbackAddress())
+          if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address)
           {
-            return inetAddress.getHostAddress().toString();
+            return inetAddress.getHostAddress();
           }
         }
       }
